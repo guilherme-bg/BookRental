@@ -2,14 +2,12 @@
 using BookRental.Server.Helpers;
 using BookRental.Server.Models;
 using BookRental.Server.Models.ViewModels;
-using Microsoft.AspNetCore.Http.HttpResults;
-using Microsoft.AspNetCore.Mvc;
+using BookRental.Server.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
 
 namespace BookRental.Server.Services
 {
-    public class BookService
+    public class BookService : IBookService
     {
         private readonly ApplicationDbContext _context;
 
@@ -26,10 +24,12 @@ namespace BookRental.Server.Services
         public async Task<ServiceResult<Book>> GetBookByIdAsync(int id)
         {
             var book = await _context.Books.FindAsync(id);
-            if (book == null)
+
+            if (book is null)
             {
-                return ServiceResult<Book>.Failure("Book not found.");
+                return ServiceResult<Book>.Failure(Constants.BOOK_NOT_FOUND_ERROR);
             }
+
             return ServiceResult<Book>.Success(book);
         }
 
@@ -41,6 +41,7 @@ namespace BookRental.Server.Services
                 Name = bookRequest.Name,
                 Synopsis = bookRequest.Synopsis
             };
+
             await _context.AddAsync(book);
             await _context.SaveChangesAsync();
             return ServiceResult.Success();
@@ -49,6 +50,7 @@ namespace BookRental.Server.Services
         public async Task<ServiceResult> DeleteBookAsync(int id)
         {
             var result = await GetBookByIdAsync(id);
+
             if (!result.IsSuccess)
             {
                 return result;
@@ -62,6 +64,7 @@ namespace BookRental.Server.Services
         public async Task<ServiceResult<Book>> UpdateBookAsync(int id, EditBookViewModel book)
         {
             var result = await GetBookByIdAsync(id);
+
             if (!result.IsSuccess)
             {
                 return result;
@@ -80,6 +83,7 @@ namespace BookRental.Server.Services
         public async Task<ServiceResult> BorrowBookAsync(int id)
         {
             var result = await GetBookByIdAsync(id);
+
             if (!result.IsSuccess)
             {
                 return result;
@@ -89,7 +93,7 @@ namespace BookRental.Server.Services
 
             if (existingBook.IsBorrowed)
             {
-                return ServiceResult<Book>.Failure("Book already borrowed.");
+                return ServiceResult<Book>.Failure(Constants.BOOK_BORROWED_ERROR);
             }
 
             existingBook.IsBorrowed = true;
@@ -102,6 +106,7 @@ namespace BookRental.Server.Services
         public async Task<ServiceResult> ReturnBookAsync(int id)
         {
             var result = await GetBookByIdAsync(id);
+
             if (!result.IsSuccess)
             {
                 return result;
@@ -111,7 +116,7 @@ namespace BookRental.Server.Services
 
             if (existingBook.IsBorrowed)
             {
-                return ServiceResult<Book>.Failure("Book was not borrowed.");
+                return ServiceResult<Book>.Failure(Constants.BOOK_NOT_BORROWED_ERROR);
             }
 
             existingBook.IsBorrowed = default;

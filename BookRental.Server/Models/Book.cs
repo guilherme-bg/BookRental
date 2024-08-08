@@ -7,13 +7,13 @@ namespace BookRental.Server.Models
         [Key]
         public int Id { get; set; }
 
-        [Required]
+        [Required(AllowEmptyStrings = false)]
         public required string Name { get; set; }
 
-        [Required]
+        [Required(AllowEmptyStrings = false)]
         public required string Synopsis { get; set; }
 
-        [Required]
+        [Required(AllowEmptyStrings = false)]
         public required string AuthorName { get; set; }
 
         public bool IsBorrowed { get; set; } = default;

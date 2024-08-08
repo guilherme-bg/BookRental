@@ -1,17 +1,17 @@
-﻿using BookRental.Server.Models;
-using BookRental.Server.Models.ViewModels;
-using BookRental.Server.Services;
+﻿using BookRental.Server.Models.ViewModels;
+using BookRental.Server.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BookRental.Server.Controllers
 {
-    [ApiController]
+    [ApiController, Authorize]
     [Route("api/[controller]")]
     public class BookController : ControllerBase
     {
-        private readonly BookService _bookService;
+        private readonly IBookService _bookService;
 
-        public BookController(BookService bookService)
+        public BookController(IBookService bookService)
         {
             _bookService = bookService;
         }
@@ -24,7 +24,7 @@ namespace BookRental.Server.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<Book>> GetBookByIdAsync(int id)
+        public async Task<IActionResult> GetBookByIdAsync(int id)
         {
             var result = await _bookService.GetBookByIdAsync(id);
             if (!result.IsSuccess)
@@ -35,7 +35,7 @@ namespace BookRental.Server.Controllers
         }
 
         [HttpPost("add")]
-        public async Task<ActionResult> AddBookAsync([FromBody] CreateBookViewModel book)
+        public async Task<IActionResult> AddBookAsync([FromBody] CreateBookViewModel book)
         {
             if (!ModelState.IsValid)
             {
@@ -47,7 +47,7 @@ namespace BookRental.Server.Controllers
         }
 
         [HttpPost("{id}/update")]
-        public async Task<ActionResult> UpdateBook(int id, [FromBody] EditBookViewModel book)
+        public async Task<IActionResult> UpdateBook(int id, [FromBody] EditBookViewModel book)
         {
             if (!ModelState.IsValid)
             {
@@ -60,23 +60,12 @@ namespace BookRental.Server.Controllers
             {
                 return NotFound(result.ErrorMessage);
             }
+
             return Ok();
         }
 
         [HttpPost("{id}/borrow")]
-        public async Task<ActionResult> BorrowBook(int id)
-        {           
-            var result = await _bookService.BorrowBookAsync(id);
-
-            if (!result.IsSuccess)
-            {
-                return BadRequest(result.ErrorMessage);
-            }
-            return Ok();
-        }
-
-        [HttpPost("{id}/return")]
-        public async Task<ActionResult> ReturnBook(int id)
+        public async Task<IActionResult> BorrowBook(int id)
         {
             var result = await _bookService.BorrowBookAsync(id);
 
@@ -84,11 +73,25 @@ namespace BookRental.Server.Controllers
             {
                 return BadRequest(result.ErrorMessage);
             }
+
+            return Ok();
+        }
+
+        [HttpPost("{id}/return")]
+        public async Task<IActionResult> ReturnBook(int id)
+        {
+            var result = await _bookService.ReturnBookAsync(id);
+
+            if (!result.IsSuccess)
+            {
+                return BadRequest(result.ErrorMessage);
+            }
+
             return Ok();
         }
 
         [HttpDelete("{id}/delete")]
-        public async Task<ActionResult> DeleteBook(int id)
+        public async Task<IActionResult> DeleteBook(int id)
         {
             var result = await _bookService.DeleteBookAsync(id);
             if (!result.IsSuccess)

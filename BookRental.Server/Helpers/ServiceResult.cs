@@ -13,7 +13,7 @@
 
         public static ServiceResult Success()
         {
-            return new ServiceResult { IsSuccess = true};
+            return new ServiceResult { IsSuccess = true };
         }
     }
 
@@ -28,7 +28,7 @@
 
         public static ServiceResult<T> Success(T data)
         {
-            return new ServiceResult<T> { IsSuccess = true, Data = data};
+            return new ServiceResult<T> { IsSuccess = true, Data = data };
         }
     }
 }
