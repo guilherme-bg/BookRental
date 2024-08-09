@@ -39,7 +39,7 @@ namespace BookRental.Server.Controllers
         {
             if (!ModelState.IsValid)
             {
-                BadRequest();
+                return BadRequest();
             }
 
             await _bookService.AddBookAsync(book);
@@ -51,7 +51,7 @@ namespace BookRental.Server.Controllers
         {
             if (!ModelState.IsValid)
             {
-                BadRequest();
+                return BadRequest();
             }
 
             var result = await _bookService.UpdateBookAsync(id, book);

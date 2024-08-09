@@ -1,9 +1,13 @@
 using BookRental.Server.Data;
+using BookRental.Server.Models;
 using BookRental.Server.Models.UI;
 using BookRental.Server.Services;
 using BookRental.Server.Services.Interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
@@ -50,8 +54,13 @@ builder.Services.AddSwaggerGen(options =>
     });
 });
 
-builder.Services.Configure<JWTCredentialsSettings>(jwtCredentials);
+builder.Services.Configure<JWTCredentialsSettings>(builder.Configuration.GetSection("JWT"));
+builder.Services.AddSingleton(resolver =>
+    resolver.GetRequiredService<IOptions<JWTCredentialsSettings>>().Value);
 builder.Services.AddScoped<IBookService, BookService>();
+builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
+builder.Services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
+
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
 {
     options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
