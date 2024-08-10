@@ -17,6 +17,11 @@ namespace BookRental.Server.Services.Interfaces
         Task<ServiceResult<Book>> GetBookByIdAsync(int id);
 
         /// <summary>
+        /// This method retrieves the book with the given name.
+        /// </summary>
+        Task<IList<Book>> GetBooksByNameAsync(string name);
+
+        /// <summary>
         /// This method registers a new book.
         /// </summary>
         Task<ServiceResult> AddBookAsync(CreateBookViewModel bookRequest);

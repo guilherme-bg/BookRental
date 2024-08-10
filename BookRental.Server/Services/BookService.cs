@@ -18,7 +18,7 @@ namespace BookRental.Server.Services
 
         public async Task<IList<Book>> GetAllBooksAsync()
         {
-            return await _context.Books.ToListAsync();
+            return await _context.Books.OrderBy(b => b.Name).ToListAsync();
         }
 
         public async Task<ServiceResult<Book>> GetBookByIdAsync(int id)
@@ -31,6 +31,11 @@ namespace BookRental.Server.Services
             }
 
             return ServiceResult<Book>.Success(book);
+        }
+
+        public async Task<IList<Book>> GetBooksByNameAsync(string name)
+        {
+            return await _context.Books.Where(b => b.Name == name).ToListAsync();            
         }
 
         public async Task<ServiceResult> AddBookAsync(CreateBookViewModel bookRequest)
@@ -124,6 +129,6 @@ namespace BookRental.Server.Services
             _context.Update(existingBook);
             await _context.SaveChangesAsync();
             return ServiceResult<Book>.Success();
-        }
+        }        
     }
 }

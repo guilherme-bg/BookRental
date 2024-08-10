@@ -34,7 +34,25 @@ namespace BookRentalTests.Controller
             // Assert
             var okResult = Assert.IsType<OkObjectResult>(result);
             var returnBooks = Assert.IsType<List<Book>>(okResult.Value);
+            Assert.Equal(3, returnBooks.Count);
+        }
+
+        [Fact]
+        public async Task GetBooksByNameAsync_ShouldReturnOkWithBooks()
+        {
+            // Arrange
+            var books = BookTestData.BooksMock();
+
+            _bookService.GetBooksByNameAsync(books.First().Name).Returns(BookTestData.BooksWithTheSameNameMock());
+
+            // Act
+            var result = await _controller.GetBooksByNameAsync(books.First().Name);
+
+            // Assert
+            var okResult = Assert.IsType<OkObjectResult>(result);
+            var returnBooks = Assert.IsType<List<Book>>(okResult.Value);
             Assert.Equal(2, returnBooks.Count);
+            Assert.Equal(books.First().Name, returnBooks.First().Name);
         }
 
         [Fact]
@@ -87,7 +105,7 @@ namespace BookRentalTests.Controller
         public async Task UpdateBook_ShouldReturnOk_WhenBookIsUpdated()
         {
             // Arrange            
-            var updateFields = new EditBookViewModel { Name = "Updated Book", AuthorName = "Updated Author", Synopsis = "Updated Synopsis" };
+            var updateFields = BookTestData.EditBookViewModel();
             _bookService.UpdateBookAsync(1, updateFields).Returns(ServiceResult<Book>.Success(new Book { Id = 1, AuthorName = updateFields.AuthorName, Name = updateFields.Name, Synopsis = updateFields.Synopsis }));
 
             // Act
@@ -101,7 +119,7 @@ namespace BookRentalTests.Controller
         public async Task UpdateBook_ShouldReturnNotFound_WhenBookDoesNotExist()
         {
             // Arrange
-            var book = new EditBookViewModel { Name = "Updated Book", AuthorName = "Updated Author", Synopsis = "Updated Synopsis" };
+            var book = BookTestData.EditBookViewModel();
             _bookService.UpdateBookAsync(1, book).Returns(ServiceResult<Book>.Failure(Constants.BOOK_NOT_FOUND_ERROR));
 
             // Act

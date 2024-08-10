@@ -15,14 +15,9 @@ namespace BookRentalTests.TestData
             };
         }
 
-        public static CreateBookViewModel InValidCreateBookViewModel()
+        public static EditBookViewModel EditBookViewModel()
         {
-            return new CreateBookViewModel
-            {
-                Name = string.Empty,
-                AuthorName = string.Empty,
-                Synopsis = string.Empty
-            };
+            return new EditBookViewModel { Name = "Updated Book", AuthorName = "Updated Author", Synopsis = "Updated Synopsis" };
         }
 
         public static IList<Book> BooksMock()
@@ -30,7 +25,17 @@ namespace BookRentalTests.TestData
             return
             [
                 new Book { Id = 1, Name = "Book1", AuthorName = "Author1", Synopsis = "Synopsis1" },
-                new Book { Id = 2, Name = "Book2", AuthorName = "Author2", Synopsis = "Synopsis2" }
+                new Book { Id = 2, Name = "Book1", AuthorName = "Author2", Synopsis = "Synopsis2" },
+                new Book { Id = 3, Name = "Book2", AuthorName = "Author3", Synopsis = "Synopsis3" }
+            ];
+        }
+
+        public static IList<Book> BooksWithTheSameNameMock()
+        {
+            return
+            [
+                new Book { Id = 1, Name = "Book1", AuthorName = "Author1", Synopsis = "Synopsis1" },
+                new Book { Id = 2, Name = "Book1", AuthorName = "Author2", Synopsis = "Synopsis2" }
             ];
         }
 

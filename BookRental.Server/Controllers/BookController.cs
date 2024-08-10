@@ -23,6 +23,14 @@ namespace BookRental.Server.Controllers
             return Ok(books);
         }
 
+        [HttpGet("findBooksByName")]
+        public async Task<IActionResult> GetBooksByNameAsync(string name)
+        {
+            var result = await _bookService.GetBooksByNameAsync(name);
+            return Ok(result);
+        }
+
+
         [HttpGet("{id}")]
         public async Task<IActionResult> GetBookByIdAsync(int id)
         {
