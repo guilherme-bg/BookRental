@@ -1,7 +1,6 @@
 ﻿using BookRental.Server.Controllers;
 using BookRental.Server.Helpers;
 using BookRental.Server.Models;
-using BookRental.Server.Models.ViewModels;
 using BookRental.Server.Services.Interfaces;
 using BookRentalTests.TestData;
 using Microsoft.AspNetCore.Mvc;
@@ -105,7 +104,7 @@ namespace BookRentalTests.Controller
         public async Task UpdateBook_ShouldReturnOk_WhenBookIsUpdated()
         {
             // Arrange            
-            var updateFields = BookTestData.EditBookViewModel();
+            var updateFields = BookTestData.ValidEditBookViewModel();
             _bookService.UpdateBookAsync(1, updateFields).Returns(ServiceResult<Book>.Success(new Book { Id = 1, AuthorName = updateFields.AuthorName, Name = updateFields.Name, Synopsis = updateFields.Synopsis }));
 
             // Act
@@ -119,7 +118,7 @@ namespace BookRentalTests.Controller
         public async Task UpdateBook_ShouldReturnNotFound_WhenBookDoesNotExist()
         {
             // Arrange
-            var book = BookTestData.EditBookViewModel();
+            var book = BookTestData.ValidEditBookViewModel();
             _bookService.UpdateBookAsync(1, book).Returns(ServiceResult<Book>.Failure(Constants.BOOK_NOT_FOUND_ERROR));
 
             // Act

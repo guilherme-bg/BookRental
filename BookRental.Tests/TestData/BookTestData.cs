@@ -15,7 +15,7 @@ namespace BookRentalTests.TestData
             };
         }
 
-        public static EditBookViewModel EditBookViewModel()
+        public static EditBookViewModel ValidEditBookViewModel()
         {
             return new EditBookViewModel { Name = "Updated Book", AuthorName = "Updated Author", Synopsis = "Updated Synopsis" };
         }

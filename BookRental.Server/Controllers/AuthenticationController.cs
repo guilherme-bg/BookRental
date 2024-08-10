@@ -1,16 +1,14 @@
 ﻿using BookRental.Server.Models;
-using BookRental.Server.Models.UI;
 using BookRental.Server.Models.ViewModels;
 using BookRental.Server.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Options;
 
 namespace BookRental.Server.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
     public class AuthenticationController : ControllerBase
-    {        
+    {
         private readonly IAuthenticationService _authenticationService;
 
 

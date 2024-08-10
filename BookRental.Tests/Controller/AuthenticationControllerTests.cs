@@ -1,16 +1,11 @@
 ﻿using BookRental.Server.Controllers;
 using BookRental.Server.Helpers;
 using BookRental.Server.Models;
-using BookRental.Server.Models.Responses;
 using BookRental.Server.Models.ViewModels;
 using BookRental.Server.Services.Interfaces;
+using BookRentalTests.TestData;
 using Microsoft.AspNetCore.Mvc;
 using NSubstitute;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BookRentalTests.Controller
 {
@@ -31,7 +26,7 @@ namespace BookRentalTests.Controller
         public async Task LoginAsync_ShouldReturnStatusCode500_WhenLoginFails()
         {
             // Arrange
-            var loginViewModel = new LoginViewModel { UserName = "user", Password = "password" };
+            var loginViewModel = AuthenticationTestData.ValidLoginViewModel();
 
             _authenticationService.LoginAsync(loginViewModel).Returns(ServiceResult<string>.Failure(Constants.INVALID_PASSWORD_ERROR));
 
@@ -48,7 +43,7 @@ namespace BookRentalTests.Controller
         public async Task LoginAsync_ShouldReturnOk_WhenLoginSucceeds()
         {
             // Arrange
-            var loginViewModel = new LoginViewModel { UserName = "user", Password = "password" };
+            var loginViewModel = AuthenticationTestData.ValidLoginViewModel();
             var token = "valid-token";
             _authenticationService.LoginAsync(loginViewModel).Returns(ServiceResult<string>.Success(token));
 
@@ -67,8 +62,8 @@ namespace BookRentalTests.Controller
             // Arrange
             var _model = new RegisterUserViewModel
             {
-                UserName = "user",
-                Password = "password",
+                UserName = null,
+                Password = null,
                 ConfirmPassword = null
             };
             _authenticationController.ModelState.AddModelError("Username", "Required");
@@ -84,13 +79,8 @@ namespace BookRentalTests.Controller
         public async Task RegisterUserAsync_ShouldReturnOk_WhenRegistrationSucceeds()
         {
             // Arrange
-            var _model = new RegisterUserViewModel
-            {
-                UserName = "user",
-                Password = "password",
-                ConfirmPassword = "password"
-            };
-            
+            var _model = AuthenticationTestData.ValidRegiserUserViewModel();
+
             _authenticationService.RegisterUserAsync(_model).Returns(ServiceResult<string>.Success(Constants.USER_SUCCESSFULLY_REGISTERED_MESSAGE));
 
             // Act

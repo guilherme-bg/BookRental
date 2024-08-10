@@ -1,7 +1,6 @@
 ﻿using BookRental.Server.Data;
 using BookRental.Server.Helpers;
 using BookRental.Server.Models;
-using BookRental.Server.Models.Responses;
 using BookRental.Server.Models.UI;
 using BookRental.Server.Models.ViewModels;
 using BookRental.Server.Services.Interfaces;
