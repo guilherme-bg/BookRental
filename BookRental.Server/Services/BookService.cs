@@ -47,7 +47,7 @@ namespace BookRental.Server.Services
                 Synopsis = bookRequest.Synopsis
             };
 
-            await _context.AddAsync(book);
+            await _context.Books.AddAsync(book);
             await _context.SaveChangesAsync();
             return ServiceResult.Success();
         }
@@ -56,12 +56,12 @@ namespace BookRental.Server.Services
         {
             var result = await GetBookByIdAsync(id);
 
-            if (!result.IsSuccess)
+            if (!result.IsSuccess && result.Data is not null)
             {
                 return result;
             }
 
-            _context.Remove(result);
+            _context.Books.Remove(result.Data);
             await _context.SaveChangesAsync();
             return ServiceResult.Success();
         }
@@ -80,7 +80,7 @@ namespace BookRental.Server.Services
             existingBook.Synopsis = book.Synopsis;
             existingBook.AuthorName = book.AuthorName;
 
-            _context.Update(existingBook);
+            _context.Books.Update(existingBook);
             await _context.SaveChangesAsync();
             return ServiceResult<Book>.Success(existingBook);
         }
@@ -103,7 +103,7 @@ namespace BookRental.Server.Services
 
             existingBook.IsBorrowed = true;
 
-            _context.Update(existingBook);
+            _context.Books.Update(existingBook);
             await _context.SaveChangesAsync();
             return ServiceResult<Book>.Success();
         }
@@ -119,14 +119,14 @@ namespace BookRental.Server.Services
 
             var existingBook = result.Data;
 
-            if (existingBook.IsBorrowed)
+            if (!existingBook.IsBorrowed)
             {
                 return ServiceResult<Book>.Failure(Constants.BOOK_NOT_BORROWED_ERROR);
             }
 
             existingBook.IsBorrowed = default;
 
-            _context.Update(existingBook);
+            _context.Books.Update(existingBook);
             await _context.SaveChangesAsync();
             return ServiceResult<Book>.Success();
         }

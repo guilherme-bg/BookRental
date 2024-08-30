@@ -1,0 +1,56 @@
+<div *ngIf="isUserAuthenticated()">
+    <div class="book-container">
+        <h2>Book List</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>Author</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let book of books">
+                    <td>{{ book.name }}</td>
+                    <td>{{ book.authorName }}</td>
+                    <td>
+                        <button>View</button>
+                        <button [disabled]="book.isBorrowed" (click)="borrowBook(book.id)">Borrow</button>
+                        <button [disabled]="!book.isBorrowed" (click)="returnBook(book.id)">Return</button>
+                        <button (click)="deleteBook(book.id)">Delete</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    
+    <button class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#addBookModal">Add New Book</button>
+    
+    <div class="modal fade" id="addBookModal" tabindex="-1" aria-labelledby="addBookModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addBookModalLabel">Add New Book</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form [formGroup]="addBookForm" (ngSubmit)="addBook()">
+                        <div class="mb-3">
+                            <label for="bookName" class="form-label">Book Name</label>
+                            <input type="text" id="bookName" formControlName="Name" class="form-control">
+                        </div>
+                        <div class="mb-3">
+                            <label for="authorName" class="form-label">Author Name</label>
+                            <input type="text" id="authorName" formControlName="AuthorName" class="form-control">
+                        </div>
+                        <div class="mb-3">
+                            <label for="synopsis" class="form-label">Synopsis</label>
+                            <textarea id="synopsis" formControlName="Synopsys" class="form-control"></textarea>
+                        </div>                        
+                        <button type="submit" class="btn btn-primary">Save</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

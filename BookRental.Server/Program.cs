@@ -20,6 +20,20 @@ var jwtCredentials = builder.Configuration.GetSection("JWT");
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAngularApp",
+        policy =>
+        {
+            policy.AllowAnyOrigin()
+                  .AllowAnyHeader()
+                  .AllowAnyMethod();
+            //policy.WithOrigins("https://localhost:4200")
+            //      .AllowAnyHeader()
+            //      .AllowAnyMethod();
+        });
+});
+
 builder.Services.AddSwaggerGen(options =>
 {
     options.SwaggerDoc("V1", new OpenApiInfo
@@ -88,6 +102,7 @@ builder.Services.AddOptions();
 
 var app = builder.Build();
 
+app.UseCors("AllowAngularApp");
 app.UseDefaultFiles();
 app.UseStaticFiles();
 
@@ -106,7 +121,5 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
-
-app.MapFallbackToFile("/index.html");
 
 app.Run();
