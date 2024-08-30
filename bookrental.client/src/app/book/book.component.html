@@ -23,34 +23,34 @@
             </tbody>
         </table>
     </div>
-    
-    <button class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#addBookModal">Add New Book</button>
-    
-    <div class="modal fade" id="addBookModal" tabindex="-1" aria-labelledby="addBookModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="addBookModalLabel">Add New Book</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <form [formGroup]="addBookForm" (ngSubmit)="addBook()">
-                        <div class="mb-3">
-                            <label for="bookName" class="form-label">Book Name</label>
-                            <input type="text" id="bookName" formControlName="Name" class="form-control">
-                        </div>
-                        <div class="mb-3">
-                            <label for="authorName" class="form-label">Author Name</label>
-                            <input type="text" id="authorName" formControlName="AuthorName" class="form-control">
-                        </div>
-                        <div class="mb-3">
-                            <label for="synopsis" class="form-label">Synopsis</label>
-                            <textarea id="synopsis" formControlName="Synopsys" class="form-control"></textarea>
-                        </div>                        
-                        <button type="submit" class="btn btn-primary">Save</button>
-                    </form>
-                </div>
+
+    <button type="button" class="btn btn-primary" (click)="openModal(template)">Add New Book</button>
+
+    <ng-template #template>
+        <div class="modal-header">
+            <h5 class="modal-title">Add New Book</h5>            
+        </div>
+        <div class="modal-body">
+            <div class="modal-body">
+                <form [formGroup]="addBookForm">
+                    <div class="mb-3">
+                        <label for="bookName" class="form-label">Book Name</label>
+                        <input type="text" id="bookName" formControlName="name" class="form-control">
+                    </div>
+                    <div class="mb-3">
+                        <label for="authorName" class="form-label">Author Name</label>
+                        <input type="text" id="authorName" formControlName="authorName" class="form-control">
+                    </div>
+                    <div class="mb-3">
+                        <label for="bookSynopsis" class="form-label">Synopsis</label>
+                        <textarea id="bookSynopsis" formControlName="synopsis" class="form-control"></textarea>
+                    </div>
+                </form>
             </div>
         </div>
-    </div>
+        <div class="modal-footer">            
+            <input type="submit" class="btn btn-primary" (click)="addBook(); modalRef?.hide()" value="Save">
+            <button type="button" class="btn btn-secondary" (click)="modalRef?.hide()">Close</button>            
+        </div>
+    </ng-template>
 </div>

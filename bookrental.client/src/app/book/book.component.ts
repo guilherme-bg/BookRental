@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 
 import { Book } from '../model/book';
 import { BookService } from '../services/book/book.service';
@@ -16,16 +17,21 @@ export class BookComponent implements OnInit {
   books: Book[] = [];
   selectedBook: any;
   addBookForm!: FormGroup;
+  modalRef?: BsModalRef;
 
-  constructor(private fb: FormBuilder, private bookService: BookService, private jwtHelper: JwtHelperService, private router: Router) {}
+  constructor(private modalService: BsModalService, private fb: FormBuilder, private bookService: BookService, private jwtHelper: JwtHelperService, private router: Router) { }
 
   ngOnInit(): void {
     this.loadBooks();
     this.addBookForm = this.fb.group({
       name: ['', Validators.required],
       authorName: ['', Validators.required],
-      synopsis: ['', Validators.required],
+      synopsis: new FormControl(['', Validators.required]),
     });
+  }
+
+  openModal(template: any) {
+    this.modalRef = this.modalService.show(template);
   }
 
   isUserAuthenticated() {
@@ -33,12 +39,12 @@ export class BookComponent implements OnInit {
     if (token && !this.jwtHelper.isTokenExpired(token)) {
       return true;
     }
-    else {      
+    else {
       this.router.navigate(['/login']);
       return false;
     }
   }
-   
+
   loadBooks() {
     this.bookService.getBooks().subscribe(
       (data) => {
@@ -61,8 +67,11 @@ export class BookComponent implements OnInit {
       this.bookService.addBook(this.addBookForm.value).subscribe(
         () => this.loadBooks(),
         (error) => console.error('Error adding book', error)
-      );     
-    }    
+      );
+    }
+    if (!this.addBookForm.valid){
+      console.error("Invalid book");
+    } 
   }
 
   updateBook(id: number, book: any) {
