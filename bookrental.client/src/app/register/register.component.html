@@ -1,0 +1,31 @@
+<div class="central-container">
+    <h2>Register</h2>
+    <form [formGroup]="registerForm" (ngSubmit)="register()">
+      <div>
+        <label for="username">Username</label>
+        <input type="text" id="username" formControlName="username">
+      </div>
+      <div>
+        <label for="password">Password</label>
+        <input type="password" id="password" formControlName="password">
+        <div class="password-rules" *ngIf="registerForm.get('password')?.touched && registerForm.get('password')?.invalid">
+          <small *ngIf="registerForm.get('password')?.hasError('required')">Password is required.</small>
+          <small *ngIf="registerForm.get('password')?.hasError('minlength')">Password must be at least 8 characters long.</small>
+        </div>
+      </div>
+      <div>
+        <label for="confirmPassword">Confirm Password</label>
+        <input type="password" id="confirmPassword" formControlName="confirmPassword">
+        <div class="password-rules" *ngIf="registerForm.get('confirmPassword')?.touched && registerForm.get('confirmPassword')?.invalid">
+          <small *ngIf="registerForm.get('confirmPassword')?.hasError('required')">Please confirm your password.</small>
+          <small *ngIf="registerForm.get('confirmPassword')?.hasError('passwordMismatch')">Passwords do not match.</small>
+        </div>
+      </div>
+      <div *ngIf="registerForm.hasError('mismatch')">
+        <p style="color: red;">Passwords do not match.</p>
+      </div>
+      <button type="submit" [disabled]="registerForm.invalid" class="btn btn-primary">Register</button>
+    </form>
+    <p>Already have an account? You can try <a [routerLink]="['/login']">signing in</a>.</p>
+  </div>
+  

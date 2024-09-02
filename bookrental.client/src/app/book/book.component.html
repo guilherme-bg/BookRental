@@ -1,0 +1,76 @@
+<div *ngIf="isUserAuthenticated()">
+    <div class="central-container">
+        <h2>Books</h2>
+        <nav class="d-flex mb-3">
+            <input type="search" placeholder="Search by name" [(ngModel)]="searchedBookName"
+                class="search-box me-2" />
+            <button class="btn btn-outline-success me-2" [disabled]="!searchedBookName"
+                (click)="filterBooksByName()">Filter</button>
+            <button class="btn btn-outline-warning me-2" [disabled]="!searchedBookName" (click)="loadBooks()">Clear
+                Filter</button>
+            <button type="button" class="btn btn-success" (click)="openModal(addBookTemplate)">Add New Book</button>
+        </nav>
+        <table>
+            <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>Author</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let book of books">
+                    <td>{{ book.name }}</td>
+                    <td>{{ book.authorName }}</td>
+                    <td>
+                        <button type="button" class="btn btn-info"
+                            (click)="openBookDetailsModal(bookDetailsTemplate, book)">Details</button>
+                        <button [disabled]="book.isBorrowed" (click)="borrowBook(book.id)" class="btn btn-primary">Borrow</button>
+                        <button [disabled]="!book.isBorrowed" (click)="returnBook(book.id)" class="btn btn-warning">Return</button>
+                        <button (click)="deleteBook(book.id)" class="btn btn-danger">Delete</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <ng-template #addBookTemplate>
+        <div class="modal-header">
+            <h5 class="modal-title">Add New Book</h5>
+        </div>
+        <div class="modal-body">
+            <form [formGroup]="addBookForm">
+                <div class="mb-3">
+                    <label for="bookName" class="form-label">Book Name</label>
+                    <input type="text" id="bookName" formControlName="name" class="form-control">
+                </div>
+                <div class="mb-3">
+                    <label for="authorName" class="form-label">Author Name</label>
+                    <input type="text" id="authorName" formControlName="authorName" class="form-control">
+                </div>
+                <div class="mb-3">
+                    <label for="bookSynopsis" class="form-label">Synopsis</label>
+                    <textarea id="bookSynopsis" formControlName="synopsis" class="form-control"></textarea>
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-primary" (click)="addBook(); modalRef?.hide()">Save</button>
+            <button type="button" class="btn btn-secondary" (click)="modalRef?.hide()">Close</button>
+        </div>
+    </ng-template>
+
+    <ng-template #bookDetailsTemplate>
+        <div class="modal-header">
+            <h5 class="modal-title">{{ selectedBook?.name }}</h5>
+        </div>
+        <div class="modal-body">
+            <p><strong>Author:</strong> {{ selectedBook?.authorName }}</p>
+            <p><strong>Synopsis:</strong></p>
+            <p>{{ selectedBook?.synopsis }}</p>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" (click)="modalRef?.hide()">Close</button>
+        </div>
+    </ng-template>
+</div>
