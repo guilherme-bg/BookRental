@@ -14,10 +14,11 @@ import { JwtHelperService } from '@auth0/angular-jwt';
 })
 
 export class BookComponent implements OnInit {
-  books: Book[] = [];
-  selectedBook: any;
+  books: Book[] = [];  
+  selectedBook?: Book;
   addBookForm!: FormGroup;
   modalRef?: BsModalRef;
+  searchedBookName: string = '';
 
   constructor(private modalService: BsModalService, private fb: FormBuilder, private bookService: BookService, private jwtHelper: JwtHelperService, private router: Router) { }
 
@@ -26,11 +27,17 @@ export class BookComponent implements OnInit {
     this.addBookForm = this.fb.group({
       name: ['', Validators.required],
       authorName: ['', Validators.required],
-      synopsis: new FormControl(['', Validators.required]),
+      synopsis: ['', Validators.required]
     });
+    this.filterBooksByName();
   }
 
   openModal(template: any) {
+    this.modalRef = this.modalService.show(template);
+  }
+
+  openBookDetailsModal(template: any, book: Book) {
+    this.selectedBook = book;
     this.modalRef = this.modalService.show(template);
   }
 
@@ -55,10 +62,9 @@ export class BookComponent implements OnInit {
     );
   }
 
-  searchBooksByName(name: string) {
-    this.bookService.getBooksByName(name).subscribe(
-      (data) => this.books = data,
-      (error) => console.error('Error searching books', error)
+  filterBooksByName(): void {
+    this.books = this.books.filter(book =>
+      book.name.toLowerCase().includes(this.searchedBookName.toLowerCase())
     );
   }
 
@@ -73,14 +79,7 @@ export class BookComponent implements OnInit {
       console.error("Invalid book");
     } 
   }
-
-  updateBook(id: number, book: any) {
-    this.bookService.updateBook(id, book).subscribe(
-      () => this.loadBooks(),
-      (error) => console.error('Error updating book', error)
-    );
-  }
-
+  
   borrowBook(id: number) {
     this.bookService.borrowBook(id).subscribe(
       () => this.loadBooks(),

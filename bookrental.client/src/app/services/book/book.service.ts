@@ -13,22 +13,10 @@ export class BookService {
 
   getBooks(): Observable<any> {    
     return this.http.get(`${this.apiUrl}/list`);
-  }
-
-  getBooksByName(name: string): Observable<any> {
-    return this.http.get(`${this.apiUrl}/findBooksByName`, { params: { name } });
-  }
-
-  getBookById(id: number): Observable<any> {
-    return this.http.get(`${this.apiUrl}/${id}`);
-  }
+  }  
 
   addBook(book: any): Observable<any> {
     return this.http.post(`${this.apiUrl}/add`, book);
-  }
-
-  updateBook(id: number, book: any): Observable<any> {
-    return this.http.post(`${this.apiUrl}/${id}/update`, book);
   }
 
   borrowBook(id: number): Observable<any> {

@@ -1,4 +1,4 @@
-<div class="container">
+<div class="central-container">
     <h2>Register</h2>
     <form [formGroup]="registerForm" (ngSubmit)="register()">
       <div>
@@ -24,7 +24,7 @@
       <div *ngIf="registerForm.hasError('mismatch')">
         <p style="color: red;">Passwords do not match.</p>
       </div>
-      <button type="submit" [disabled]="registerForm.invalid">Register</button>
+      <button type="submit" [disabled]="registerForm.invalid" class="btn btn-primary">Register</button>
     </form>
     <p>Already have an account? You can try <a [routerLink]="['/login']">signing in</a>.</p>
   </div>

@@ -1,4 +1,4 @@
-<div class="container">
+<div class="central-container">
     <h2>Login</h2>
     <form (ngSubmit)="login()">
       <div>
@@ -9,7 +9,7 @@
         <label for="password">Password</label>
         <input type="password" id="password" [(ngModel)]="credentials.password" name="password">
       </div>
-      <button type="submit">Login</button>      
+      <button type="submit" class="btn btn-primary">Login</button>      
     </form>
     <p>Don't have an account? You can <a [routerLink]="['/register']">sign up</a>.</p>
   </div>
