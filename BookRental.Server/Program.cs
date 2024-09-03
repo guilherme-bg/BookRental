@@ -15,8 +15,6 @@ var builder = WebApplication.CreateBuilder(args);
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 var jwtCredentials = builder.Configuration.GetSection("JWT");
 
-// Add services to the container.
-
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 
@@ -28,9 +26,6 @@ builder.Services.AddCors(options =>
             policy.AllowAnyOrigin()
                   .AllowAnyHeader()
                   .AllowAnyMethod();
-            //policy.WithOrigins("https://localhost:4200")
-            //      .AllowAnyHeader()
-            //      .AllowAnyMethod();
         });
 });
 
@@ -106,7 +101,6 @@ app.UseCors("AllowAngularApp");
 app.UseDefaultFiles();
 app.UseStaticFiles();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
